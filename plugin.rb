@@ -8,6 +8,13 @@ after_initialize do
 
   Category.class_eval do
 
+    def parent_category_validator
+      if parent_category_id
+        errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
+        errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
+      end
+    end
+
     def url
       url = Category.class_variable_get(:@@url_cache)[self.id]
       unless url
