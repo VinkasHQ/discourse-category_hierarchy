@@ -1,3 +1,5 @@
+import computed from "ember-addons/ember-computed-decorators";
+import Site from 'discourse/models/site';
 import Category from 'discourse/models/category';
 import CategoryList from 'discourse/models/category-list';
 import EditCategoryGeneral from 'discourse/components/edit-category-general';
@@ -8,6 +10,45 @@ export default {
   name: 'category_hierarchy',
   after: 'inject-discourse-objects',
   initialize() {
+
+    Site.reopen({
+
+      // Sort subcategories under parents
+      @computed("categoriesByCount", "categories.[]")
+      sortedCategories(cats) {
+        const result = [];
+        var remaining = {};
+
+        cats.forEach(c => {
+          const parentCategoryId = parseInt(c.get('parent_category_id'), 10);
+          if (!parentCategoryId) {
+            result.pushObject(c);
+          } else {
+            remaining[parentCategoryId] = remaining[parentCategoryId] || [];
+            remaining[parentCategoryId].pushObject(c);
+          }
+        });
+
+        while (!jQuery.isEmptyObject(remaining)) {
+          const list = remaining;
+
+          remaining = {};
+          Object.keys(list).forEach(parentCategoryId => {
+            const category = result.findBy('id', parseInt(parentCategoryId, 10)),
+                  index = result.indexOf(category);
+
+            if (index !== -1) {
+              result.replace(index + 1, 0, list[parentCategoryId]);
+            } else {
+              remaining[parentCategoryId] = list[parentCategoryId];
+            }
+          });
+        }
+
+        return result;
+      }
+
+    });
 
     Category.reopenClass({
 
