@@ -1,0 +1,15 @@
+<a href={{category.url}}>
+  {{#if category.uploaded_logo.url}}
+    {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
+  {{/if}}
+
+  {{#if category.read_restricted}}
+    {{fa-icon 'lock'}}
+  {{/if}}
+
+  <span class="category-title">{{category.name}}</span>
+
+  {{#if category.description}}
+    <p class="category-description">{{category.description}}</p>
+  {{/if}}
+</a>
