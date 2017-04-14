@@ -1,67 +1,76 @@
-<nav class="category-breadcrumbs">
-  <ul>
-  {{#each categories as |category|}}
-    <li>{{category-link category}}</li>
-  {{/each}}
-    <li>{{category-link category}}</li>
-  </ul>
-</nav>
+<a href={{category.url}}>
+  {{#if category.uploaded_logo.url}}
+    {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
+  {{/if}}
+</a>
 
-<h3 class="row">
-  <a href={{category.url}}>
-    {{#if category.uploaded_logo.url}}
-      {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
-    {{/if}}
+<div>
+  <h3>
+    <a href={{category.url}} class="row">
+      {{#if category.read_restricted}}
+        {{fa-icon 'lock'}}
+      {{/if}}
 
-    {{#if category.read_restricted}}
-      {{fa-icon 'lock'}}
-    {{/if}}
+      <span class="category-name">{{category.name}}</span>
 
-    <span class="category-title">{{category.name}}</span>
+      <nav class="category-breadcrumbs">
+        <ul class="nav nav-pills">
+          {{#each categories as |category|}}
+            <li>{{category-link category}}</li>
+          {{/each}}
+        </ul>
+      </nav>
+    </a>
+  </h3>
 
-    {{#if category.description}}
-      <p class="category-description">{{category.description}}</p>
-    {{/if}}
-  </a>
-</h3>
+  {{#if category.description}}
+    <p class="category-description">{{category.description}}</p>
+  {{/if}}
+</div>
 
 <style type="text/css">
   .category-header {
-    margin-bottom: 30px;
+    margin: 12px 0 24px 0;
+  }
+  .category-header::after {
+    display: table;
+    content: " ";
+    clear: both;
+  }
+  .category-header h3 {
+    height: 30px;
+  }
+  .category-header h3 .category-name {
+    float: left;
+    margin-right: 20px;
+    font-size: 30px;
+    line-height: 30px;
+    color: #212121;
+  }
+  .category-header .category-description {
+    color: #909090;
+    margin: 12px 0 0 0;
+  }
+  .category-breadcrumbs {
+    float: left;
+  }
+  .category-header > hr {
+    clear: both;
   }
   .category-header .category-logo {
     margin-bottom: 0;
   }
-  .category-header h3 .category-title {
-    font-size: 1.6em;
-    color: #212121;
-  }
-  .category-header h3 .category-description {
-    color: #909090;
-    font-weight: normal;
-  }
-  .category-breadcrumbs {
-    margin-bottom: 30px;
-    height: 46px;
-  }
-  .category-breadcrumbs:after {
-    clear: both;
-  }
-  .category-breadcrumbs > ul {
-    margin: 0;
+  .category-breadcrumbs > ul.nav {
+    margin-bottom: 0;
   }
   .category-breadcrumbs > ul > li {
-    float: left;
-    height: 46px;
-    margin-right: 18px;
-    padding: 12px 24px;
     box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
-    list-style: none;
   }
   .category-breadcrumbs > ul > li > a.badge-wrapper.bullet {
-    font-size: 1.3em;
+    margin: 0;
+    font-size: 1em;
     font-weight: normal;
-    line-height: 125%;
+    line-height: 20px;
   }
   .category-breadcrumbs .badge-wrapper.bullet .badge-category-bg, .category-breadcrumbs .badge-wrapper.bullet .badge-category-parent-bg {
     display: none;

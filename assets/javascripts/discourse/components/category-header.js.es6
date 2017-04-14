@@ -10,7 +10,7 @@ export default Ember.Component.extend({
       category = category.parentCategory;
       list.push(category);
     }
-    return list.reverse();
+    return list;
   }.property('category')
 
 });
