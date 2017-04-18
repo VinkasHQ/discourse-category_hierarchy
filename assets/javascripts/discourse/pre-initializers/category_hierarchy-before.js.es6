@@ -4,6 +4,7 @@ import Category from 'discourse/models/category';
 import CategoryList from 'discourse/models/category-list';
 import EditCategoryGeneral from 'discourse/components/edit-category-general';
 import EditCategorySettings from 'discourse/components/edit-category-settings';
+import SiteHeaderComponent from 'discourse/components/site-header';
 import NavigationCategoryController from 'discourse/controllers/navigation/category';
 
 export default {
@@ -91,6 +92,58 @@ export default {
     EditCategorySettings.reopen({
 
       isParentCategory: true,
+
+    });
+
+    SiteHeaderComponent.reopen({
+      _category: null,
+
+      setCategory(category) {
+        this._category = category;
+        this.queueRerender();
+      },
+
+      willDestroyElement() {
+        this._super();
+        $('body').off('keydown.header');
+        $(window).off('resize.discourse-menu-panel');
+
+        this.appEvents.off('header:show-category');
+        this.appEvents.off('header:hide-category');
+        this.appEvents.off('header:show-topic');
+        this.appEvents.off('header:hide-topic');
+        this.appEvents.off('dom:clean');
+      },
+
+      buildArgs() {
+        return {
+          flagCount: 0, // TODO: fix it
+          topic: this._topic,
+          category: this._category,
+          canSignUp: this.get('canSignUp')
+        };
+      },
+
+      didInsertElement() {
+        this._super();
+        $(window).on('resize.discourse-menu-panel', () => this.afterRender());
+
+        this.appEvents.on('header:show-topic', topic => this.setTopic(topic));
+        this.appEvents.on('header:hide-topic', () => this.setTopic(null));
+
+        this.appEvents.on('header:show-category', category => this.setCategory(category));
+        this.appEvents.on('header:hide-category', () => this.setCategory(null));
+
+        this.dispatch('notifications:changed', 'user-notifications');
+        this.dispatch('header:keyboard-trigger', 'header');
+
+        this.appEvents.on('dom:clean', () => {
+          // For performance, only trigger a re-render if any menu panels are visible
+          if (this.$('.menu-panel').length) {
+            this.eventDispatched('dom:clean', 'header');
+          }
+        });
+      }
 
     });
 
