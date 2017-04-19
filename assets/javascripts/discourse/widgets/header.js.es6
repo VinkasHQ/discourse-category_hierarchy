@@ -225,7 +225,7 @@ export default createWidget('header', {
       }
     });
 
-    const contents = [ this.attach('home-logo', { minimized: !!attrs.topic, category: attrs.category }),  // vinkas
+    const contents = [ this.attach('home-logo', { minimized: !!attrs.topic, forum: attrs.forum }),  // vinkas
                              h('div.panel.clearfix', panels) ];
 
     if (attrs.topic) {

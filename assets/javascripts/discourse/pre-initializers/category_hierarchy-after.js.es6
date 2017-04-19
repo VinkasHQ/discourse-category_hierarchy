@@ -14,7 +14,7 @@ export default {
     Discourse.DiscoveryCategoryRoute.reopen({
 
       _createSubcategoryList(category) {
-        this.appEvents.trigger('header:show-category', category);
+        this.appEvents.trigger('header:show-forum', category.get('forum'));
 
         this._categoryList = null;
         if (category.get('show_subcategory_list')) {
@@ -30,7 +30,7 @@ export default {
     Discourse.DiscoveryParentCategoryRoute.reopen({
 
       _createSubcategoryList(category) {
-        this.appEvents.trigger('header:show-category', category);
+        this.appEvents.trigger('header:show-forum', category.get('forum'));
 
         this._categoryList = null;
         if (category.get('show_subcategory_list')) {

@@ -1,6 +1,8 @@
 {{add-category-class category=category}}
 
-{{category-header category=category}}
+{{#unless category.is_forum}}
+  {{category-header category=category}}
+{{/unless}}
 
 <div class='category-navigation'>
   {{bread-crumbs categories=categories

@@ -51,6 +51,38 @@ export default {
 
     });
 
+    Category.reopen({
+
+      @computed('custom_fields.is_forum')
+      is_forum: {
+        get() {
+          return this.get("custom_fields.is_forum") || !this.get("parent_category_id");
+        },
+        set(value) {
+          this.set("custom_fields.is_forum", value);
+        }
+      },
+
+      @computed('parent_category_id')
+      forum() {
+        var category = this;
+        while (!category.get('is_forum')) {
+          if (category.get("parent_category_id")) {
+            const parent_category = Category.findById(category.get("parent_category_id"));
+            if (parent_category) {
+              category = parent_category
+            } else {
+              return category;
+            }
+          } else {
+            return category;
+          }
+        }
+        return category;
+      }
+
+    });
+
     Category.reopenClass({
 
       slugFor(category, separator = "/") {
@@ -96,10 +128,10 @@ export default {
     });
 
     SiteHeaderComponent.reopen({
-      _category: null,
+      _forum: null,
 
-      setCategory(category) {
-        this._category = category;
+      setForum(forum) {
+        this._forum = forum;
         this.queueRerender();
       },
 
@@ -108,8 +140,8 @@ export default {
         $('body').off('keydown.header');
         $(window).off('resize.discourse-menu-panel');
 
-        this.appEvents.off('header:show-category');
-        this.appEvents.off('header:hide-category');
+        this.appEvents.off('header:show-forum');
+        this.appEvents.off('header:hide-forum');
         this.appEvents.off('header:show-topic');
         this.appEvents.off('header:hide-topic');
         this.appEvents.off('dom:clean');
@@ -119,7 +151,7 @@ export default {
         return {
           flagCount: 0, // TODO: fix it
           topic: this._topic,
-          category: this._category,
+          forum: this._forum,
           canSignUp: this.get('canSignUp')
         };
       },
@@ -131,8 +163,8 @@ export default {
         this.appEvents.on('header:show-topic', topic => this.setTopic(topic));
         this.appEvents.on('header:hide-topic', () => this.setTopic(null));
 
-        this.appEvents.on('header:show-category', category => this.setCategory(category));
-        this.appEvents.on('header:hide-category', () => this.setCategory(null));
+        this.appEvents.on('header:show-forum', forum => this.setForum(forum));
+        this.appEvents.on('header:hide-forum', () => this.setForum(null));
 
         this.dispatch('notifications:changed', 'user-notifications');
         this.dispatch('header:keyboard-trigger', 'header');
