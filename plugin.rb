@@ -4,6 +4,8 @@
 # authors: Vinoth Kannan (vinothkannan@vinkas.com)
 # url: https://github.com/VinkasHQ/discourse-category_hierarchy
 
+register_asset "stylesheets/category_hierarchy.scss"
+
 after_initialize do
 
   Category.class_eval do

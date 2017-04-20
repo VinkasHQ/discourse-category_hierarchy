@@ -13,31 +13,31 @@ export default {
 
         href() {
           var href = this.settings.href;
-          if (this.attrs.forum) {
-            href = this.attrs.forum.get('url');
+          if (this.attrs.category) {
+            href = this.attrs.category.get('url');
           }
           return (typeof href === "function") ? href() : href;
         },
 
-        forum_logo() {
+        category_logo() {
           const mobileView = this.site.mobileView;
-          const forum = this.attrs.forum;
+          const category = this.attrs.category;
 
-          if (forum) {
-            const title = forum.get('name');
-            const logo = forum.get('uploaded_logo');
+          if (category) {
+            const title = category.get('name');
+            const logo = category.get('uploaded_logo');
 
             if (logo) {
               if (!mobileView && this.attrs.minimized) {
-                return h('img#site-logo.logo-small', { key: 'forum-logo-small', attributes: { src: logo.url, width: 33, height: 33, alt: title } });
+                return h('img#site-logo.logo-small', { key: 'category-logo-small', attributes: { src: logo.url, width: 33, height: 33, alt: title } });
               } else if (mobileView) {
-                return h('img#site-logo.logo-big', { key: 'forum-logo-mobile', attributes: { src: logo.url, alt: title } });
+                return h('img#site-logo.logo-big', { key: 'category-logo-mobile', attributes: { src: logo.url, alt: title } });
               } else {
-                return h('img#site-logo.logo-big', { key: 'forum-logo-big', attributes: { src: logo.url, alt: title } });
+                return h('img#site-logo.logo-big', { key: 'category-logo-big', attributes: { src: logo.url, alt: title } });
               }
             }
 
-            return h('h2#site-text-logo.text-logo', { key: 'forum-logo-text' }, title);
+            return h('h2#site-text-logo.text-logo', { key: 'category-logo-text' }, title);
           }
         },
 
@@ -52,10 +52,13 @@ export default {
           const title = siteSettings.title;
 
           var siteLogo = null;
-          const forumLogo = this.forum_logo();
+          const categoryLogo = this.category_logo();
 
           if (!mobileView && this.attrs.minimized) {
+            if (categoryLogo) return categoryLogo;
+
             const logoSmallUrl = siteSettings.logo_small_url || '';
+
             if (logoSmallUrl.length) {
               siteLogo =  h('img#site-logo.logo-small', { key: 'site-logo-small', attributes: { src: logoSmallUrl, width: 33, height: 33, alt: title } });
             } else {
@@ -69,11 +72,20 @@ export default {
             siteLogo = h('h2#site-text-logo.text-logo', { key: 'site-logo-text' }, title);
           }
 
-          if (forumLogo) return h('div.logo', [siteLogo, forumLogo]);
+          if (categoryLogo) return h('div.logo', [siteLogo, categoryLogo]);
 
           return siteLogo;
         }
 
+      });
+
+      api.decorateWidget('header-icons:before', helper => {
+        return helper.h('li', [
+            helper.h('a.icon', {
+                href: '/',
+                title: 'Home'
+            }, helper.h('i.fa.fa-home')),
+        ]);
       });
     });
 
