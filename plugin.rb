@@ -70,4 +70,12 @@ after_initialize do
 
   end
 
+  BasicCategorySerializer.class_eval do
+    attribute :is_featured
+
+    def is_featured
+      @is_featured ||= object.custom_fields["is_featured"]
+    end
+  end
+
 end

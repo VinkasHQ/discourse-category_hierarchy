@@ -53,16 +53,6 @@ export default {
 
     Category.reopen({
 
-      @computed('custom_fields.is_featured')
-      is_featured: {
-        get() {
-          return this.get("custom_fields.is_featured") || !this.get("parent_category_id");
-        },
-        set(value) {
-          this.set("custom_fields.is_featured", value);
-        }
-      },
-
       @computed('parent_category_id')
       featured_category() {
         var category = this;
