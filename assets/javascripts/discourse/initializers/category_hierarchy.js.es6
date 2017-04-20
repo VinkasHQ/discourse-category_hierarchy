@@ -29,15 +29,15 @@ export default {
 
             if (logo) {
               if (!mobileView && this.attrs.minimized) {
-                return h('img#site-logo.logo-small', { key: 'category-logo-small', attributes: { src: logo.url, width: 33, height: 33, alt: title } });
+                return h('img#category-logo.logo-small', { key: 'category-logo-small', attributes: { src: logo.url, width: 33, height: 33, alt: title } });
               } else if (mobileView) {
-                return h('img#site-logo.logo-big', { key: 'category-logo-mobile', attributes: { src: logo.url, alt: title } });
+                return h('img#category-logo.logo-big', { key: 'category-logo-mobile', attributes: { src: logo.url, alt: title } });
               } else {
-                return h('img#site-logo.logo-big', { key: 'category-logo-big', attributes: { src: logo.url, alt: title } });
+                return h('img#category-logo.logo-big', { key: 'category-logo-big', attributes: { src: logo.url, alt: title } });
               }
             }
 
-            return h('h2#site-text-logo.text-logo', { key: 'category-logo-text' }, title);
+            return h('h2#category-text-logo.text-logo', { key: 'category-logo-text' }, title);
           }
         },
 
@@ -80,7 +80,7 @@ export default {
       });
 
       api.decorateWidget('header-icons:before', helper => {
-        return helper.h('li', [
+        return helper.h('li.home', [
             helper.h('a.icon', {
                 href: '/',
                 title: 'Home'

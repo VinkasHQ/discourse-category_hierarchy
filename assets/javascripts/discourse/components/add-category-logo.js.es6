@@ -13,6 +13,7 @@ export default Ember.Component.extend({
     this._remove();
     if (category) {
       this.appEvents.trigger('header:show-category', category);
+      $("body").addClass(`category`);
     }
   },
 
@@ -23,6 +24,7 @@ export default Ember.Component.extend({
 
   _remove() {
     this.appEvents.trigger('header:hide-category');
+    $("body").removeClass(`category`);
   },
 
   willDestroyElement() {
