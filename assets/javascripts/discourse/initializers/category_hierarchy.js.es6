@@ -55,8 +55,6 @@ export default {
           const categoryLogo = this.category_logo();
 
           if (!mobileView && this.attrs.minimized) {
-            if (categoryLogo) return categoryLogo;
-
             const logoSmallUrl = siteSettings.logo_small_url || '';
 
             if (logoSmallUrl.length) {
@@ -64,6 +62,8 @@ export default {
             } else {
               siteLogo = iconNode('home');
             }
+
+            return siteLogo;
           } else if (showMobileLogo) {
             siteLogo = h('img#site-logo.logo-big', { key: 'site-logo-mobile', attributes: { src: mobileLogoUrl, alt: title } });
           } else if (logoUrl.length) {
