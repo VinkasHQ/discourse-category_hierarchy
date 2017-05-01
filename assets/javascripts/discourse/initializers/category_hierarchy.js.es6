@@ -2,6 +2,7 @@ import { withPluginApi, reopenWidget } from 'discourse/lib/plugin-api'
 
 
 import { h } from 'virtual-dom';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 
 export default {
   name: 'category-hierarchy',
