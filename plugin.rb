@@ -47,6 +47,26 @@ after_initialize do
       self.where(id: slug_or_id.to_i).includes(:featured_users).first
     end
 
+    def visible_posts
+      query = Post.joins(:topic)
+                  .where(['topics.category_id IN (?)', ids])
+                  .where('topics.visible = true')
+                  .where('posts.deleted_at IS NULL')
+                  .where('posts.user_deleted = false')
+      self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
+    end
+
+    def ids
+      @ids ||= begin
+        list = [self.id]
+        subcategories.each do |sc|
+          list += sc.ids
+        end
+
+        list
+      end
+    end
+
   end
 
   ListController.class_eval do
