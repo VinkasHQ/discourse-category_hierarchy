@@ -10,6 +10,14 @@ after_initialize do
 
   Category.class_eval do
 
+    def count_with_subcategories(method)
+      count = self.send(method) || 0
+      subcategories.each do |sc|
+        count += sc.count_with_subcategories(method)
+      end
+      count
+    end
+
     def parent_category_validator
       if parent_category_id
         errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
@@ -76,6 +84,14 @@ after_initialize do
     def is_featured
       @is_featured ||= object.custom_fields["is_featured"]
     end
+  end
+
+  CategoryDetailedSerializer.class_eval do
+
+    def count_with_subcategories(method)
+      object.count_with_subcategories(method)
+    end
+
   end
 
 end
